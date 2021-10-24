@@ -15,14 +15,6 @@ class NoteHelper(context: Context) {
     private lateinit var database: SQLiteDatabase
 
     /**
-     *  Metode menginisiasi database
-     */
-    private var INSTANCE: NoteHelper? = null
-    fun getInstance(context: Context): NoteHelper = INSTANCE ?: synchronized(this) {
-        INSTANCE ?: NoteHelper(context)
-    }
-
-    /**
      *  Metode membuka koneksi database
      */
     @Throws(SQLException::class)
@@ -64,7 +56,7 @@ class NoteHelper(context: Context) {
     /**
      *  Metode memperbarui data
      */
-    fun update(id: String, values: ContentValues?) : Int {
+    fun update(id: String, values: ContentValues?): Int {
         return database.update(DATABASE_TABLE, values, "$ID = ?", arrayOf(id))
     }
 
@@ -76,9 +68,16 @@ class NoteHelper(context: Context) {
     }
 
 
-
-
     companion object {
         private const val DATABASE_TABLE = TABLE_NAME
+
+        /**
+         *  Metode menginisiasi database
+         */
+        private var INSTANCE: NoteHelper? = null
+        fun getInstance(context: Context): NoteHelper = INSTANCE ?: synchronized(this) {
+            INSTANCE ?: NoteHelper(context)
+        }
+
     }
 }
