@@ -2,17 +2,16 @@ package com.rully.noteappsq.main
 
 import android.content.ContentValues
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.rully.noteappsq.R
 import com.rully.noteappsq.databinding.ActivityNoteBinding
 import com.rully.noteappsq.db.DatabaseContract
-import com.rully.noteappsq.db.DatabaseContract.NoteColumns.Companion.DATE
 import com.rully.noteappsq.db.NoteHelper
 import com.rully.noteappsq.entity.Note
 import java.text.SimpleDateFormat
@@ -48,9 +47,9 @@ class NoteActivity : AppCompatActivity(), View.OnClickListener {
         if (isEdit) {
             actionBarTitle = getString(R.string.changed)
             btnTitle = getString(R.string.updated)
-            note.let {
-                binding.etTitle.setText(it?.title)
-                binding.etDesc.setText(it?.description)
+            note?.let {
+                binding.etTitle.setText(it.title)
+                binding.etDesc.setText(it.description)
             }
         } else {
             actionBarTitle = getString(R.string.add)
@@ -86,16 +85,16 @@ class NoteActivity : AppCompatActivity(), View.OnClickListener {
             values.put(DatabaseContract.NoteColumns.DESCRIPTION, desc)
 
             if (isEdit) {
-                val result = noteHelper.update(note?.id.toString(), values).toLong()
+                val result = noteHelper.update(note?.id.toString(), values)
                 if (result > 0) {
                     setResult(RESULT_UPDATE, intent)
                     finish()
                 } else {
-                    Toast.makeText(this, "Update data is failed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@NoteActivity, "Update data is failed", Toast.LENGTH_SHORT).show()
                 }
             } else {
                 note?.date = getCurrentDate()
-                values.put(DATE, getCurrentDate())
+                values.put(DatabaseContract.NoteColumns.DATE, getCurrentDate())
                 val result = noteHelper.insert(values)
 
                 if (result > 0) {
@@ -103,7 +102,7 @@ class NoteActivity : AppCompatActivity(), View.OnClickListener {
                     setResult(RESULT_ADD, intent)
                     finish()
                 } else {
-                    Toast.makeText(this, "Failed to add data", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@NoteActivity, "Failed to add data", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -159,14 +158,14 @@ class NoteActivity : AppCompatActivity(), View.OnClickListener {
                 if (isDialogClose) {
                     finish()
                 } else {
-                    val result = noteHelper.deleteById(note?.id.toString())
+                    val result = noteHelper.deleteById(note?.id.toString()).toLong()
                     if (result > 0) {
                         val intent = Intent()
                         intent.putExtra(EXTRA_POSITION, position)
                         setResult(RESULT_DELETE, intent)
                         finish()
                     } else {
-                        Toast.makeText(this, "Delete data is failed", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@NoteActivity, "Delete data is failed", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
