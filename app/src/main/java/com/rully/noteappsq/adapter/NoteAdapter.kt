@@ -60,7 +60,7 @@ class NoteAdapter(private val onItemClickCallback: OnItemClickCallback) :
     }
 
     interface OnItemClickCallback {
-        fun onItemClicked(selectedNote: Note, position: Int)
+        fun onItemClicked(selectedNote: Note?, position: Int?)
     }
 
 }

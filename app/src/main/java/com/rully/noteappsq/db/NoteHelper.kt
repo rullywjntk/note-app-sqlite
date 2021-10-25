@@ -64,7 +64,7 @@ class NoteHelper(context: Context) {
      *  Metode menghapus data
      */
     fun deleteById(id: String): Int {
-        return database.delete(DATABASE_TABLE, "$ID = 'id'", null)
+        return database.delete(DATABASE_TABLE, "$ID = '$id'", null)
     }
 
 
